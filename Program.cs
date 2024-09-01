@@ -19,30 +19,11 @@ namespace Lexogic
             _client.Log += LogAsync;
             _client.MessageReceived += MessageReceivedAsync;
 
-            string token = GetTokenFromFile("token.txt");
-
-            if (string.IsNullOrEmpty(token))
-            {
-                Console.WriteLine("Error: Bot token not found. Ensure 'token.txt' contains the token.");
-                return;
-            }
+            string? token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
             await Task.Delay(-1);
-        }
-        
-        private static string GetTokenFromFile(string filePath)
-        {
-            try
-            {
-                return File.ReadAllText(filePath).Trim();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error reading the token file: {ex.Message}");
-                return string.Empty;
-            }
         }
         
         private static Task LogAsync(LogMessage log)
