@@ -1,4 +1,4 @@
 Your go-to dictionary bot!
+Use the following command to look up any English word you don't know.
 
-Use te following command to lookup any English word you don't know.
-`!define [word to lookup]`
+`!define [word to look up]`
