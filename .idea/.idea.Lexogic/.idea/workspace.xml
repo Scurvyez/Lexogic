@@ -7,7 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f05b7ee6-82c8-4756-936e-1843ff46a305" name="Changes" comment="" />
+    <list default="true" id="f05b7ee6-82c8-4756-936e-1843ff46a305" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,6 +77,8 @@
       <updated>1725129982031</updated>
       <workItem from="1725129984023" duration="9241000" />
       <workItem from="1725152829072" duration="6000" />
+      <workItem from="1725152961055" duration="737000" />
+      <workItem from="1725153717443" duration="8000" />
     </task>
     <servers />
   </component>

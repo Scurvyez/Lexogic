@@ -1,16 +1,15 @@
 ﻿using System.Text.Json;
 using Discord;
 using Discord.WebSocket;
-using RestSharp;
 
 namespace Lexogic
 {
-    /// <summary>
-    /// Renew the server host at https://client.pylexnodes.net
-    /// </summary>
     public class Program
     {
         private DiscordSocketClient _client;
+        private static readonly HttpClient httpClient = new ();
+        private const string ApiKey = "1785f668-ba89-4a18-a90d-1b59082d6124";
+        private const string DictionaryReference = "collegiate";
         
         public static Task Main(string[] args) => new Program().MainAsync();
 
@@ -71,22 +70,39 @@ namespace Lexogic
                 }
             }
         }
-        
+
         private static async Task<string> GetDefinitionAsync(string word)
         {
-            RestClient client = new ("https://api.dictionaryapi.dev/api/v2/entries/en/");
-            RestRequest request = new (word);
-            RestResponse response = await client.ExecuteAsync(request);
+            // Construct the API request URL
+            string requestUri = $"https://dictionaryapi.com/api/v3/references/{DictionaryReference}/json/{Uri.EscapeDataString(word)}?key={ApiKey}";
 
-            if (response.IsSuccessful)
+            HttpResponseMessage response = await httpClient.GetAsync(requestUri);
+
+            if (response.IsSuccessStatusCode)
             {
-                // Parse the JSON response and extract the definition
-                JsonDocument jsonResponse = JsonDocument.Parse(response.Content ?? string.Empty);
-                JsonElement firstMeaning = jsonResponse.RootElement[0].GetProperty("meanings")[0];
-                JsonElement firstDefinition = firstMeaning.GetProperty("definitions")[0];
-                return firstDefinition.GetProperty("definition").GetString() ?? string.Empty;
+                string jsonContent = await response.Content.ReadAsStringAsync();
+
+                // Parse the JSON response
+                JsonDocument jsonResponse = JsonDocument.Parse(jsonContent);
+                if (jsonResponse.RootElement.ValueKind == JsonValueKind.Array && jsonResponse.RootElement.GetArrayLength() > 0)
+                {
+                    JsonElement firstEntry = jsonResponse.RootElement[0];
+
+                    // Check if it's a dictionary entry with "shortdef"
+                    if (firstEntry.TryGetProperty("shortdef", out JsonElement shortDefArray))
+                    {
+                        string definition = shortDefArray[0].GetString();
+                        return definition;
+                    }
+                    else
+                    {
+                        // Handle case where no definition is found or it's not a standard dictionary entry
+                        return "No definition found or entry is not a standard dictionary entry.";
+                    }
+                }
             }
-            return null!;
+
+            return "Failed to retrieve the definition.";
         }
     }
 }
