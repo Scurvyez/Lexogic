@@ -6,11 +6,12 @@ namespace Lexogic
     public class DictionaryService
     {
         private readonly HttpClient _httpClient;
-        private const string ApiKey = "1785f668-ba89-4a18-a90d-1b59082d6124";
         private const string DictionaryReference = "collegiate";
-
+        private readonly string _mW_Api_Key;
+        
         public DictionaryService(HttpClient httpClient)
         {
+            _mW_Api_Key = Environment.GetEnvironmentVariable("MW_API_KEY") ?? string.Empty;
             _httpClient = httpClient;
         }
 
@@ -52,9 +53,9 @@ namespace Lexogic
 
         private async Task<JsonElement?> FetchWordEntryAsync(string word)
         {
-            string requestUri = $"https://dictionaryapi.com/api/v3/references/{DictionaryReference}/json/{Uri.EscapeDataString(word)}?key={ApiKey}";
+            string requestUri = $"https://dictionaryapi.com/api/v3/references/{DictionaryReference}/json/{Uri.EscapeDataString(word)}?key={_mW_Api_Key}";
             HttpResponseMessage response = await _httpClient.GetAsync(requestUri);
-
+            
             if (!response.IsSuccessStatusCode)
                 return null;
 
@@ -125,7 +126,7 @@ namespace Lexogic
                         textElement.ValueKind == JsonValueKind.String)
                     {
                         // Remove custom tags and discard their contents
-                        string formattedText = RemoveCustomTags(textElement.GetString() ?? string.Empty);
+                        string formattedText = ParseJSONTags(textElement.GetString() ?? string.Empty);
                         etymologies.Add($"{etymologies.Count + 1}. {formattedText}");
                     }
                     else
@@ -143,22 +144,31 @@ namespace Lexogic
             return $"\n{allEtymologies}";
         }
 
-        private static string RemoveCustomTags(string input)
+        private static string ParseJSONTags(string input)
         {
             const string patternMa = @"\{ma\}.*?\{\/ma\}";
             const string patternMat = @"\{mat\}.*?\{\/mat\}";
             const string patternEtLink = @"\{et_link.*?\}";
-
+            const string patternDxEty = @"\{dx_ety\}|\{\/dx_ety\}";
+            const string patternDxt = @"\{dxt\|([^\|]+).*?\}";
+            
+            // Remove {ma} and {mat} tags with their content
             string output = Regex.Replace(input, patternMa, "", RegexOptions.Singleline);
             output = Regex.Replace(output, patternMat, "", RegexOptions.Singleline);
-
+    
+            // Remove {et_link} tags
             output = Regex.Replace(output, patternEtLink, "", RegexOptions.Singleline);
-            
-            output = output.Replace("{ma}", "").Replace("{/ma}", "")
-                .Replace("{mat}", "").Replace("{/mat}", "");
 
+            // Remove {dx_ety} and {/dx_ety} tags
+            output = Regex.Replace(output, patternDxEty, "", RegexOptions.Singleline);
+
+            // Replace {dxt|link|...} with the linked word (captured group)
+            output = Regex.Replace(output, patternDxt, " $1", RegexOptions.Singleline);
+
+            // Replace italic tags with asterisks
             output = output.Replace("{it}", "*").Replace("{/it}", "*");
 
+            // Remove any extra spaces that might have been introduced
             output = Regex.Replace(output, @"\s+", " ").Trim();
 
             return output;
