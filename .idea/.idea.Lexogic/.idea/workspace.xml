@@ -8,8 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f05b7ee6-82c8-4756-936e-1843ff46a305" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Commands/CommandBuilder.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Commands/CommandHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Program/Program.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Service/DictionaryService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Lexogic.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Lexogic.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +87,11 @@
       <workItem from="1725153717443" duration="8000" />
       <workItem from="1725153922278" duration="97000" />
       <workItem from="1725154126173" duration="74000" />
+      <workItem from="1725156472990" duration="144000" />
+      <workItem from="1725157203899" duration="2654000" />
+      <workItem from="1725223505571" duration="6853000" />
+      <workItem from="1725240157378" duration="291000" />
+      <workItem from="1725241045275" duration="5924000" />
     </task>
     <servers />
   </component>
