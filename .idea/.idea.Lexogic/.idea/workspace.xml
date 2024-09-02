@@ -8,7 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f05b7ee6-82c8-4756-936e-1843ff46a305" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Debugging/PrefixedConsole.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/CommandBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CommandBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/CommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CommandHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Service/DictionaryService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Service/DictionaryService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -88,6 +92,7 @@
       <workItem from="1725241045275" duration="5924000" />
       <workItem from="1725249301924" duration="8747000" />
       <workItem from="1725259658038" duration="1070000" />
+      <workItem from="1725261175972" duration="6597000" />
     </task>
     <servers />
   </component>

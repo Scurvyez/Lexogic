@@ -15,16 +15,43 @@ namespace Lexogic
             _httpClient = httpClient;
         }
 
+        public async Task<bool> IsWordOffensiveAsync(string word)
+        {
+            JsonElement? firstEntry = await FetchWordEntryAsync(word);
+
+            if (firstEntry == null)
+                return false;
+
+            if (firstEntry.Value.TryGetProperty("meta", out JsonElement meta) &&
+                meta.TryGetProperty("offensive", out JsonElement offensive))
+            {
+                return offensive.GetBoolean();
+            }
+
+            return false;
+        }
+
         public async Task<string> GetDefinitionAsync(string word)
         {
             JsonElement? firstEntry = await FetchWordEntryAsync(word);
-            
+
             if (firstEntry == null)
                 return "\nFailed to retrieve a definition.";
 
-            return firstEntry.Value.TryGetProperty("suggestions", out JsonElement suggestions) 
-                ? $"\n{suggestions.GetString()}" 
-                : ParseShortDefinitions(firstEntry.Value, "definition(s)");
+            string stems = "";
+            if (firstEntry.Value.TryGetProperty("meta", out JsonElement meta) &&
+                meta.TryGetProperty("stems", out JsonElement stemsArray))
+            {
+                stems = $"\n**`Related Terms:`** {string.Join(", ", stemsArray.EnumerateArray().Select(stem => stem.GetString()))}";
+            }
+
+            if (firstEntry.Value.TryGetProperty("suggestions", out JsonElement suggestions))
+            {
+                return $"\n{suggestions.GetString()}";
+            }
+    
+            string definition = ParseShortDefinitions(firstEntry.Value, "definition(s)");
+            return $"{definition}{stems}";
         }
 
         public async Task<string> GetVariantsAsync(string word)
@@ -81,7 +108,6 @@ namespace Lexogic
             if (suggestions.Count <= 0) return null;
             string suggestionMessage = string.Join(", ", suggestions);
             return JsonDocument.Parse($"{{\"suggestions\": \"No exact match found. Did you mean: {suggestionMessage}\"}}").RootElement;
-
         }
 
         private static string ParseShortDefinitions(JsonElement entry, string notFoundMessage)
@@ -90,7 +116,7 @@ namespace Lexogic
                 return $"\nNo {notFoundMessage} found or entry is not a standard dictionary entry.";
 
             var definitions = shortDefArray.EnumerateArray()
-                .Select((def, index) => $"{index + 1}. {def.GetString()}");
+                .Select((def, index) => $"**`{index + 1}.`** {def.GetString()}");
 
             return $"\n{string.Join("\n", definitions)}";
         }
@@ -127,11 +153,11 @@ namespace Lexogic
                     {
                         // Remove custom tags and discard their contents
                         string formattedText = ParseJSONTags(textElement.GetString() ?? string.Empty);
-                        etymologies.Add($"{etymologies.Count + 1}. {formattedText}");
+                        etymologies.Add($"**`{etymologies.Count + 1}.`** {formattedText}");
                     }
                     else
                     {
-                        etymologies.Add($"{etymologies.Count + 1}. [Invalid etymology data]");
+                        etymologies.Add($"**`{etymologies.Count + 1}.`** [Invalid etymology data]");
                     }
                 }
                 else

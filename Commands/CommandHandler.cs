@@ -13,54 +13,39 @@ namespace Lexogic
 
         public async Task HandleSlashCommandAsync(SocketSlashCommand command)
         {
+            string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
+            
             switch (command.CommandName)
             {
                 case "define":
-                {
-                    string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
-                    string definition = await _dictionaryService.GetDefinitionAsync(word);
-
-                    if (string.IsNullOrEmpty(definition))
-                    {
-                        await command.RespondAsync($"No definition(s) found for **{word}**.");
-                    }
-                    else
-                    {
-                        await command.RespondAsync($"**{word}**:{definition}");
-                    }
+                    await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetDefinitionAsync, _dictionaryService.IsWordOffensiveAsync);
                     break;
-                }
+                
                 case "variants":
-                {
-                    string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
-                    string variants = await _dictionaryService.GetVariantsAsync(word);
-
-                    if (string.IsNullOrEmpty(variants))
-                    {
-                        await command.RespondAsync($"No variant spelling(s) found for **{word}**.");
-                    }
-                    else
-                    {
-                        await command.RespondAsync($"**{word}**{variants}");
-                    }
+                    await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetVariantsAsync, _dictionaryService.IsWordOffensiveAsync);
                     break;
-                }
+                
                 case "etymology":
-                {
-                    string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
-                    string etymology = await _dictionaryService.GetEtymologyAsync(word);
-
-                    if (string.IsNullOrEmpty(etymology))
-                    {
-                        await command.RespondAsync($"No known etymologies found for **{word}**.");
-                    }
-                    else
-                    {
-                        await command.RespondAsync($"**{word}**:{etymology}");
-                    }
+                    await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetEtymologyAsync, _dictionaryService.IsWordOffensiveAsync);
                     break;
-                }
+
+                default:
+                    await command.RespondAsync("Unknown command.");
+                    break;
             }
+        }
+
+        private static async Task HandleDictionaryCommandAsync(SocketSlashCommand command, string word, 
+            Func<string, Task<string>> getInfoAsync, Func<string, Task<bool>> isWordOffensiveAsync)
+        {
+            bool isOffensive = await isWordOffensiveAsync(word);
+            string response = await getInfoAsync(word);
+
+            string message = isOffensive
+                ? "The word is deemed offensive and cannot be displayed."
+                : $"**`{word}...`** {response}";
+
+            await command.RespondAsync(message);
         }
     }
 }

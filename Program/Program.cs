@@ -25,12 +25,12 @@ namespace Lexogic
 
             if (string.IsNullOrEmpty(token))
             {
-                Console.WriteLine("Error: Bot token is not set or is empty!");
+                PrefixedConsole.WriteLine("Error: Bot token is not set or is empty!");
                 return;
             }
 
-            Console.WriteLine($"Bot token retrieved: {token.Length} characters long.");
-            Console.WriteLine($"Token snippet: {token.Substring(0, 3)}...{token.Substring(token.Length - 3)}");
+            PrefixedConsole.WriteLine($"Bot token retrieved: {token.Length} characters long.");
+            PrefixedConsole.WriteLine($"Token snippet: {token.Substring(0, 3)}...{token.Substring(token.Length - 3)}");
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
@@ -42,7 +42,7 @@ namespace Lexogic
 
         private static Task LogAsync(LogMessage log)
         {
-            Console.WriteLine(log);
+            PrefixedConsole.WriteLine(log.ToString());
             return Task.CompletedTask;
         }
 
@@ -54,12 +54,12 @@ namespace Lexogic
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildVariantsCommand().Build());
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildEtymologyCommand().Build());
 
-                Console.WriteLine("Global slash commands /define, /variants, /etymology registered.");
+                PrefixedConsole.WriteLine("Global slash commands /define, /variants, /etymology registered.");
             }
             catch (HttpException ex)
             {
                 string json = JsonSerializer.Serialize(ex.Errors, new JsonSerializerOptions { WriteIndented = true });
-                Console.WriteLine(json);
+                PrefixedConsole.WriteLine(json);
             }
         }
 
