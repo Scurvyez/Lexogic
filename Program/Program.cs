@@ -51,9 +51,10 @@ namespace Lexogic
             try
             {
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildDefineCommand().Build());
-                await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildVarsCommand().Build());
+                await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildVariantsCommand().Build());
+                await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildEtymologyCommand().Build());
 
-                Console.WriteLine("Global slash commands /define and /vars registered.");
+                Console.WriteLine("Global slash commands /define, /variants, /etymology registered.");
             }
             catch (HttpException ex)
             {

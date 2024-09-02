@@ -30,7 +30,7 @@ namespace Lexogic
                     }
                     break;
                 }
-                case "vars":
+                case "variants":
                 {
                     string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
                     string variants = await _dictionaryService.GetVariantsAsync(word);
@@ -42,6 +42,21 @@ namespace Lexogic
                     else
                     {
                         await command.RespondAsync($"**{word}**{variants}");
+                    }
+                    break;
+                }
+                case "etymology":
+                {
+                    string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
+                    string etymology = await _dictionaryService.GetEtymologyAsync(word);
+
+                    if (string.IsNullOrEmpty(etymology))
+                    {
+                        await command.RespondAsync($"No known etymologies found for **{word}**.");
+                    }
+                    else
+                    {
+                        await command.RespondAsync($"**{word}**:{etymology}");
                     }
                     break;
                 }
