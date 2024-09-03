@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Lexogic
 {
@@ -36,7 +35,7 @@ namespace Lexogic
             JsonElement? firstEntry = await FetchWordEntryAsync(word);
 
             if (firstEntry == null)
-                return "\nFailed to retrieve a definition.";
+                return "\n**`Failed to retrieve a definition.`**";
 
             string stems = "";
             if (firstEntry.Value.TryGetProperty("meta", out JsonElement meta) &&
@@ -59,7 +58,7 @@ namespace Lexogic
             JsonElement? firstEntry = await FetchWordEntryAsync(word);
             
             if (firstEntry == null)
-                return "\nFailed to retrieve any variant spelling(s).";
+                return "\n**`Failed to retrieve any variant spelling(s).`**";
 
             return firstEntry.Value.TryGetProperty("suggestions", out JsonElement suggestions) 
                 ? $"\n{suggestions.GetString()}" 
@@ -71,13 +70,13 @@ namespace Lexogic
             JsonElement? firstEntry = await FetchWordEntryAsync(word);
             
             if (firstEntry == null)
-                return "\nFailed to retrieve any known etymologies.";
+                return "\n**`Failed to retrieve any known etymologies.`**";
 
             return firstEntry.Value.TryGetProperty("suggestions", out JsonElement suggestions) 
                 ? $"\n{suggestions.GetString()}" 
                 : ParseEtymologies(firstEntry.Value);
         }
-
+        
         private async Task<JsonElement?> FetchWordEntryAsync(string word)
         {
             string requestUri = $"https://dictionaryapi.com/api/v3/references/{DictionaryReference}/json/{Uri.EscapeDataString(word)}?key={_mW_Api_Key}";
@@ -107,7 +106,7 @@ namespace Lexogic
 
             if (suggestions.Count <= 0) return null;
             string suggestionMessage = string.Join(", ", suggestions);
-            return JsonDocument.Parse($"{{\"suggestions\": \"No exact match found. Did you mean: {suggestionMessage}\"}}").RootElement;
+            return JsonDocument.Parse($"{{\"suggestions\": \"**`No exact match found. Did you mean:`** {suggestionMessage}\"}}").RootElement;
         }
 
         private static string ParseShortDefinitions(JsonElement entry, string notFoundMessage)
@@ -124,7 +123,7 @@ namespace Lexogic
         private static string ParseVariants(JsonElement entry)
         {
             if (!entry.TryGetProperty("vrs", out JsonElement variantsArray) || variantsArray.GetArrayLength() == 0)
-                return "\nNo variant spelling(s) found for this word.";
+                return "\n**`No variant spelling(s) found for this word.`**";
 
             var variants = variantsArray.EnumerateArray()
                 .Select(v => v.GetProperty("va").GetString());
@@ -136,7 +135,7 @@ namespace Lexogic
         {
             if (!entry.TryGetProperty("et", out JsonElement etymologyArray) || etymologyArray.ValueKind != JsonValueKind.Array)
             {
-                return "\nNo known etymology found for this word.";
+                return "\n**`No known etymology found for this word.`**";
             }
 
             var etymologies = new List<string>();
@@ -151,8 +150,7 @@ namespace Lexogic
                     if (typeElement.ValueKind == JsonValueKind.String && typeElement.GetString() == "text" &&
                         textElement.ValueKind == JsonValueKind.String)
                     {
-                        // Remove custom tags and discard their contents
-                        string formattedText = ParseJSONTags(textElement.GetString() ?? string.Empty);
+                        string formattedText = JSONParserHelper.ParseJSONTags(textElement.GetString() ?? string.Empty);
                         etymologies.Add($"**`{etymologies.Count + 1}.`** {formattedText}");
                     }
                     else
@@ -168,36 +166,6 @@ namespace Lexogic
             string allEtymologies = string.Join("\n", etymologies);
             
             return $"\n{allEtymologies}";
-        }
-
-        private static string ParseJSONTags(string input)
-        {
-            const string patternMa = @"\{ma\}.*?\{\/ma\}";
-            const string patternMat = @"\{mat\}.*?\{\/mat\}";
-            const string patternEtLink = @"\{et_link.*?\}";
-            const string patternDxEty = @"\{dx_ety\}|\{\/dx_ety\}";
-            const string patternDxt = @"\{dxt\|([^\|]+).*?\}";
-            
-            // Remove {ma} and {mat} tags with their content
-            string output = Regex.Replace(input, patternMa, "", RegexOptions.Singleline);
-            output = Regex.Replace(output, patternMat, "", RegexOptions.Singleline);
-    
-            // Remove {et_link} tags
-            output = Regex.Replace(output, patternEtLink, "", RegexOptions.Singleline);
-
-            // Remove {dx_ety} and {/dx_ety} tags
-            output = Regex.Replace(output, patternDxEty, "", RegexOptions.Singleline);
-
-            // Replace {dxt|link|...} with the linked word (captured group)
-            output = Regex.Replace(output, patternDxt, " $1", RegexOptions.Singleline);
-
-            // Replace italic tags with asterisks
-            output = output.Replace("{it}", "*").Replace("{/it}", "*");
-
-            // Remove any extra spaces that might have been introduced
-            output = Regex.Replace(output, @"\s+", " ").Trim();
-
-            return output;
         }
     }
 }

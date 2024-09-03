@@ -50,11 +50,20 @@ namespace Lexogic
         {
             try
             {
+                var existingCommands = await _client.GetGlobalApplicationCommandsAsync();
+
+                foreach (SocketApplicationCommand? command in existingCommands)
+                {
+                    await command.DeleteAsync();
+                }
+                
+                PrefixedConsole.WriteLine($"All existing commands cleared.");
+                
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildDefineCommand().Build());
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildVariantsCommand().Build());
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildEtymologyCommand().Build());
 
-                PrefixedConsole.WriteLine("Global slash commands /define, /variants, /etymology registered.");
+                PrefixedConsole.WriteLine($"Global slash commands /define, /variants, and /etymology, registered.");
             }
             catch (HttpException ex)
             {

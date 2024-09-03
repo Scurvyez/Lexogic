@@ -28,7 +28,7 @@ namespace Lexogic
                 case "etymology":
                     await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetEtymologyAsync, _dictionaryService.IsWordOffensiveAsync);
                     break;
-
+                
                 default:
                     await command.RespondAsync("Unknown command.");
                     break;
