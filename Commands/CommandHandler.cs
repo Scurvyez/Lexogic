@@ -5,30 +5,52 @@ namespace Lexogic
     public class CommandHandler
     {
         private readonly DictionaryService _dictionaryService;
+        private readonly InstanceInfo _instanceInfo;
 
-        public CommandHandler(DictionaryService dictionaryService)
+        public CommandHandler(DictionaryService dictionaryService, InstanceInfo instanceInfo)
         {
             _dictionaryService = dictionaryService;
+            _instanceInfo = instanceInfo;
         }
 
         public async Task HandleSlashCommandAsync(SocketSlashCommand command)
         {
-            string word = command.Data.Options.First().Value.ToString() ?? string.Empty;
-            
+            string? word = command.Data.Options.FirstOrDefault()?.Value?.ToString();
+
             switch (command.CommandName)
             {
                 case "define":
-                    await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetDefinitionAsync, _dictionaryService.IsWordOffensiveAsync);
+                    if (!string.IsNullOrEmpty(word))
+                    {
+                        await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetDefinitionAsync, _dictionaryService.IsWordOffensiveAsync);
+                    }
                     break;
-                
+
                 case "variants":
-                    await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetVariantsAsync, _dictionaryService.IsWordOffensiveAsync);
+                    if (!string.IsNullOrEmpty(word))
+                    {
+                        await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetVariantsAsync, _dictionaryService.IsWordOffensiveAsync);
+                    }
                     break;
-                
+
                 case "etymology":
-                    await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetEtymologyAsync, _dictionaryService.IsWordOffensiveAsync);
+                    if (!string.IsNullOrEmpty(word))
+                    {
+                        await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetEtymologyAsync, _dictionaryService.IsWordOffensiveAsync);
+                    }
                     break;
                 
+                case "synonyms":
+                    if (!string.IsNullOrEmpty(word))
+                    {
+                        await HandleDictionaryCommandAsync(command, word, _dictionaryService.GetSynonymsAsync, _dictionaryService.IsWordOffensiveAsync);
+                    }
+                    break;
+
+                case "info":
+                    await _instanceInfo.HandleBotInfoCommandAsync(command);
+                    break;
+
                 default:
                     await command.RespondAsync("Unknown command.");
                     break;

@@ -8,12 +8,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f05b7ee6-82c8-4756-936e-1843ff46a305" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Service/JSONParserHelper.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Commands/InstanceInfo.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Service/SynonymExtractor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Lexogic/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Commands/CommandBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CommandBuilder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Commands/CommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Commands/CommandHandler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Service/DictionaryService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Service/DictionaryService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/icon.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Service/JSONParserHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Service/JSONParserHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/Lexogic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/Lexogic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/Lexogic.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/Lexogic.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Debug/net7.0/Lexogic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net7.0/Lexogic.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +28,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3bd1bb8af9ce9bf18121a42db749a1dff1c7b2591fad9ec5ad62b52135e4/SlashCommandBuilder.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -95,6 +104,10 @@
       <workItem from="1725261175972" duration="6597000" />
       <workItem from="1725305215314" duration="9211000" />
       <workItem from="1725347460056" duration="1115000" />
+      <workItem from="1725379419865" duration="598000" />
+      <workItem from="1725523355585" duration="1686000" />
+      <workItem from="1725613264462" duration="17320000" />
+      <workItem from="1725753287841" duration="3120000" />
     </task>
     <servers />
   </component>

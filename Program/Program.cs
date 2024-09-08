@@ -9,17 +9,20 @@ namespace Lexogic
     {
         private DiscordSocketClient _client;
         private CommandHandler _commandHandler;
+        private InstanceInfo _instanceInfo;
 
         public static Task Main(string[] args) => new Program().MainAsync();
 
         private async Task MainAsync()
         {
             _client = new DiscordSocketClient();
+            _instanceInfo = new InstanceInfo(_client);
             _client.Log += LogAsync;
             _client.Ready += ReadyAsync;
 
             DictionaryService dictionaryService = new (new HttpClient());
-            _commandHandler = new CommandHandler(dictionaryService);
+            _commandHandler = new CommandHandler(dictionaryService, _instanceInfo);
+
 
             string? token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
 
@@ -59,11 +62,13 @@ namespace Lexogic
                 
                 PrefixedConsole.WriteLine($"All existing commands cleared.");
                 
+                await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildBotInfoCommand().Build());
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildDefineCommand().Build());
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildVariantsCommand().Build());
                 await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildEtymologyCommand().Build());
-
-                PrefixedConsole.WriteLine($"Global slash commands /define, /variants, and /etymology, registered.");
+                await _client.Rest.CreateGlobalCommand(CommandBuilder.BuildSynonymsCommand().Build());
+                
+                PrefixedConsole.WriteLine($"Global slash commands /info, /define, /variants, /etymology, and /synonyms, registered.");
             }
             catch (HttpException ex)
             {
