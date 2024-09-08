@@ -35,7 +35,7 @@ namespace Lexogic
             JsonElement? firstEntry = await FetchWordEntryAsync(word);
 
             if (firstEntry == null)
-                return "\n**`Failed to retrieve any definitions.`**";
+                return "\n**`Failed to retrieve a definition.`**";
 
             string stems = "";
             if (firstEntry.Value.TryGetProperty("meta", out JsonElement meta) &&
@@ -49,7 +49,7 @@ namespace Lexogic
                 return $"\n{suggestions.GetString()}";
             }
     
-            string definition = ParseDefinitionsBySense(firstEntry.Value, "definition(s)");
+            string definition = ParseShortDefinitions(firstEntry.Value, "definition(s)");
             return $"{definition}{stems}";
         }
 
@@ -120,10 +120,7 @@ namespace Lexogic
             string suggestionMessage = string.Join(", ", suggestions);
             return JsonDocument.Parse($"{{\"suggestions\": \"**`No exact match found. Did you mean:`** {suggestionMessage}\"}}").RootElement;
         }
-        
-        /// <summary>
-        /// OBSOLETE
-        /// </summary>
+
         private static string ParseShortDefinitions(JsonElement entry, string notFoundMessage)
         {
             if (!entry.TryGetProperty("shortdef", out JsonElement shortDefArray) || shortDefArray.GetArrayLength() == 0)
@@ -133,31 +130,6 @@ namespace Lexogic
                 .Select((def, index) => $"**`{index + 1}.`** {JSONParserHelper.ParseJSONTags(def.GetString() ?? string.Empty)}");
 
             return $"\n{string.Join("\n", definitions)}";
-        }
-        
-        private static string ParseDefinitionsBySense(JsonElement entry, string notFoundMessage)
-        {
-            if (!entry.TryGetProperty("def", out JsonElement defArray) || defArray.GetArrayLength() == 0)
-                return $"\nNo {notFoundMessage} found or entry is not a standard dictionary entry.";
-
-            List<string> sensesList = new List<string>();
-    
-            foreach (JsonElement defElement in defArray.EnumerateArray())
-            {
-                if (!defElement.TryGetProperty("sseq", out JsonElement sseqArray)) continue;
-                foreach (JsonElement senseSequence in sseqArray.EnumerateArray())
-                {
-                    foreach (JsonElement senseGroup in senseSequence.EnumerateArray())
-                    {
-                        if (senseGroup[0].GetString() != "sense") continue;
-                        JsonElement senseDetails = senseGroup[1];
-                        string partOfSpeech = entry.TryGetProperty("fl", out JsonElement flElement) ? flElement.GetString() ?? "Unknown" : "Unknown";
-                        string senseDefinition = ParseShortDefinitions(senseDetails, "definition(s)");
-                        sensesList.Add($"**`{partOfSpeech.ToUpper()}`**:\n{senseDefinition}");
-                    }
-                }
-            }
-            return sensesList.Any() ? string.Join("\n", sensesList) : $"\nNo {notFoundMessage} found.";
         }
 
         private static string ParseVariants(JsonElement entry)
