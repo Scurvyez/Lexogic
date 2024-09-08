@@ -11,30 +11,30 @@ Where `[word]` is the word you wish to look up.<br/>
 
 `/define benevolent`<br/>
 
-```
+```markdown
 benevolent...
 1. marked by or disposed to doing good
-2. organized for the purpose of doing good~~~~
+2. organized for the purpose of doing good
 3. marked by or suggestive of goodwill
 Related Terms: benevolent, benevolently, benevolentness, benevolentnesses
 ```
 
 `/define forsake`<br/>
 
-```
+```markdown
 forsake... 
 1. Middle English, from Old English forsacan, from for- + sacan to dispute; akin to Old English sacu action at law
 ```
 
 `/synonyms indifferent`<br/>
 
-```
+```markdown
 indifferent...
 unconcerned, incurious, aloof, detached, disinterested
 ```
 
 `/variants kabbalah`<br/>
-```
+```markdown
 kabbalah... 
 kabbala, kabala, cabala, cabbala, cabbalah
 ```
